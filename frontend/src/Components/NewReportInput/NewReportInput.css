@@ -1,0 +1,17 @@
+.center {
+    margin: auto;
+    width: 70%;
+    padding: 100px;
+  }
+
+.input-field{
+    width: 100%
+  }
+.submit-btn-div{
+   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-modal{
+  width: 60%;
+}

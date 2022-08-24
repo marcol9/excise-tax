@@ -1,0 +1,19 @@
+.calculations-table {
+    margin: auto;
+    width: 70%;
+    padding-top: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+  }
+.inputNumber{
+    width: 100%;
+}
+.calculations-table .ant-form-item {
+  margin-bottom: 0px;
+ }
+.submit-btn-div{
+  display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
