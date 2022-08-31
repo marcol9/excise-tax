@@ -77,5 +77,29 @@
 }
 .ant-picker-focused {
   box-shadow: 0 0 0 2px #52c41a5e;
+}
 
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #86BC25;
+}
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector{
+  border-color: #86BC25;
+  box-shadow: 0 0 0 2px #52c41a5e;
+
+}
+.ant-btn-primary {
+  color: rgb(0 0 0 / 100%);
+  border-color: #86BC25;
+  background: #86BC25;
+  text-shadow: none;
+  box-shadow: 0 2px 0 rgb(0 0 0 / 5%);
+}
+
+.ant-btn-primary:hover, .ant-btn-primary:focus {
+  color: rgb(0 0 0 / 100%);
+  border-color: #C4D600;
+  background: #C4D600 ;
+}
+.ant-spin-dot-item {
+  background-color: #86BC25; 
 }

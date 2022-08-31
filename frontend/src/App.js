@@ -8,12 +8,12 @@ import NewReportInput from './Components/NewReportInput/Main';
 import OldReports from './Components/OldReports/Main';
 import Calculations from './Components/Calculations/Main';
 import AccountNoInput from './Components/AccountNoInput/Main';
+import Results from './Components/Results/Main';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   NavLink,
-  useNavigate
 } from "react-router-dom";
 
 
@@ -57,9 +57,10 @@ const App = () => (
         <Routes>
           <Route path="/NewReport" element={<NewReportInput/>}/>
           <Route path="/" element={<Home/>}/>
-          <Route path='/OldReports' element={<OldReports/>}> </Route>
-          <Route path='/Calculations' element={<Calculations/>}> </Route>
-          <Route path='/AccountNoInput/:reportId' element={<AccountNoInput/>}> </Route>
+          <Route path='/OldReports' element={<OldReports/>}/> 
+          <Route path='/Calculations' element={<Calculations/>}/> 
+          <Route path='/AccountNoInput' element={<AccountNoInput/>}/> 
+          <Route path='/Results' element={<Results></Results>}/>
         </Routes>
 
       </Router>

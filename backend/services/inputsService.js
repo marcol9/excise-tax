@@ -2,8 +2,8 @@ class inputService{
     constructor(inputRepo){
         this.inputRepo = inputRepo;
     }
-    createInput(inputObject){
-        return this.inputRepo.createInput(inputObject);
+    async createInput(inputsObj){
+        return await this.inputRepo.createInput(inputsObj);
     }
 }
 export default inputService

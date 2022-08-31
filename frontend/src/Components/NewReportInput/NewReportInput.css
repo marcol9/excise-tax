@@ -1,7 +1,10 @@
 .center {
     margin: auto;
     width: 70%;
-    padding: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    padding-left: 40px;
+    padding-right: 40px;
   }
 
 .input-field{
