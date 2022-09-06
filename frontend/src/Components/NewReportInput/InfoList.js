@@ -1,10 +1,11 @@
 import React from 'react';
-
+import Checkbox from 'antd/lib/checkbox/Checkbox';
 
 const infoList = () => {
   
  
   return (
+    <>
     <ul>
           <li>
             {" "}
@@ -84,6 +85,7 @@ const infoList = () => {
             kriseramte ikke-finansielle virksomheder.
           </li>
         </ul>
+        </>
   );
 };
 

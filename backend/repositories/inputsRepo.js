@@ -1,3 +1,7 @@
+import Api400Error from "../errorHandling/api400Error.js";
+import Api500Error from "../errorHandling/api500Error.js";
+import { logError } from "../errorHandling/errorHandler.js";
+
 class inputsRepo {
   constructor(db) {
     this.db = db;
@@ -14,14 +18,17 @@ class inputsRepo {
       inputsObj.period_consumption_m3,
       inputsObj.vat_percentage,
     ];
-    try {
-      const response = await this.db.query(text, values);
+    
+      const response = await this.db.query(text, values).catch((error) => {
+        logError(error);
+        new Api500Error('Database error');
+    });;
+      if(response.rows.length === 0){
+        throw new Api400Error('Invalid input data')
+      }
       const data = response.rows[0];
       return data;
-    } catch (e) {
-      console.log(e);
-      return "database input error";
-    }
+   
   }
 }
 export default inputsRepo;

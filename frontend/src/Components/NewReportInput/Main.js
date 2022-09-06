@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form, Modal, Spin } from "antd";
+import { Button, Form, Modal, Spin, Checkbox, Alert } from "antd";
 import "./NewReportInput.css";
 import { useNavigate } from "react-router-dom";
 import InfoList from "./InfoList.js";
@@ -11,9 +11,11 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const NewReportInput = () => {
   let navigate = useNavigate();
 
-  const [isModalVisible, setIsModalVisible] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(true); //displaying modal
+  const [loading, setLoading] = useState(false);  // displaying 'loading' sign
   const [consumptionPeriodes, setConsumptionPeriodes] = useState();
+  const [checked, setChecked] = useState(false);
+  const [isAlertVisible, setIsAlertVisible] = useState(false);
 
   //to do: handle not ok case
   async function getCalculations(inputData) {
@@ -31,13 +33,15 @@ const NewReportInput = () => {
     const output = response.data.response;
     setConsumptionPeriodes(output);
     setLoading(false);
-
-    return output;
   }
 
   useEffect(() => {
     getConsumptionPeriodes();
   }, []);
+
+  const onChange = (e) => {
+    setChecked(e.target.checked);
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -51,7 +55,11 @@ const NewReportInput = () => {
   }
 
   const handleOk = () => {
+    if(checked){
     setIsModalVisible(false);
+    }else{
+      setIsAlertVisible(true)
+    }
   };
 
   const handleCancel = () => {
@@ -70,6 +78,12 @@ const NewReportInput = () => {
           width={800}
         >
           <InfoList></InfoList>
+          <Checkbox checked={checked} onChange={onChange} >I have read everything above and agree with it</Checkbox>
+          {isAlertVisible === true &&
+            <Alert message="You need to agree with terms in order to proceed" type="warning" />
+          }
+
+
         </Modal>
 
         <Form

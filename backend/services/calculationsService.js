@@ -1,5 +1,7 @@
+import Api400Error from "../errorHandling/api400Error.js";
 import calculations from "../Models/calculations.js";
 import {roundToTwo, handleVatPercentage} from '../util/util.js'
+import { validateCalculations, validateInputs } from "../util/validators.js";
 
 class calculationsService {
     constructor(calculationsRepo,taxDataService){
@@ -7,19 +9,25 @@ class calculationsService {
         this.taxDataService = taxDataService;
     }
 
-
-    async calculate(input){
+    // calculates calculations from input object
+    async calculate(inputsObj){
+        if(!validateInputs(inputsObj)){
+            throw new Api400Error('Invalid input data')
+        }
         
-        const consumption_periode = input.consumption_periode;
-        const el_invoice_amount = input.el_invoice_amount;
-        const period_consumption_kwh = input.period_consumption_kwh;
-        const calculated_chw = input.calculated_chw;
-        const water_invoice_amount = input.water_invoice_amount;
-        const period_consumption_m3 = input.period_consumption_m3;
-        const vat_percentage = handleVatPercentage(input.vat_percentage);
+        //declaring variables
+        const consumption_periode = inputsObj.consumption_periode;
+        const el_invoice_amount = inputsObj.el_invoice_amount;
+        const period_consumption_kwh = inputsObj.period_consumption_kwh;
+        const calculated_chw = inputsObj.calculated_chw;
+        const water_invoice_amount = inputsObj.water_invoice_amount;
+        const period_consumption_m3 = inputsObj.period_consumption_m3;
+        const vat_percentage = handleVatPercentage(Math.round(inputsObj.vat_percentage));
 
+        // getting tax data for specific consumption periode
         const taxData = await this.taxDataService.getTaxData(consumption_periode);
-
+        
+        //declaring variables
         const energy_tax = taxData.energy_tax;
         const reduction = taxData.reduction;
         const compensation_chw = taxData.compensation_chw;
@@ -27,6 +35,7 @@ class calculationsService {
 
         const calculationsObj = new calculations();
         
+        //updating calculations object with fields and values
         calculationsObj.taxes_total_el = roundToTwo(energy_tax/100*period_consumption_kwh);
         calculationsObj.not_reimb_tax = roundToTwo(reduction/100*period_consumption_kwh);
         calculationsObj.vat_el = roundToTwo(el_invoice_amount*0.2);
@@ -44,7 +53,11 @@ class calculationsService {
         return calculationsObj;
     }
 
+    // saves calculations object to DB
     async createCalculations(calculationsObj){
+        if(!validateCalculations(calculationsObj)){
+            throw new Api400Error('Invalid calculation data')
+        }
         return await this.calculationsRepo.createCalculations(calculationsObj);
     }
 }
