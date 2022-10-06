@@ -1,26 +1,53 @@
-import { Breadcrumb, Layout, Menu } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css'
-import {FileAddOutlined,FolderOpenOutlined } from '@ant-design/icons';
-import logo from './Deloitte-logo.svg'
-import Home from './Components/Home/Main'
-import NewReportInput from './Components/NewReportInput/Main';
-import OldReports from './Components/OldReports/Main';
-import Calculations from './Components/Calculations/Main';
-import AccountNoInput from './Components/AccountNoInput/Main';
-import Results from './Components/Results/Main';
+import Home from './Pages/Home/Main'
+import NewReportInput from './Pages/NewReportInput/Main';
+import OldReports from './Pages/OldReports/Main';
+import Calculations from './Pages/Calculations/Main';
+import AccountNoInput from './Pages/AccountNoInput/Main';
+import Results from './Pages/Results/Main';
+import HeaderMenu from './Components/HeaderMenu.js'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  NavLink,
 } from "react-router-dom";
+import ViewReport from './Pages/ViewReport/ViewReport';
+import ManageTaxData from './Pages/ManageTaxData/Main';
+import AddTaxData from './Pages/AddTaxData/Main';
+import UpdateTaxData from './Pages/UpdateTaxData/Main.js';
+import Footer from './Components/Footer';
+import UpdatePrerequisites from './Pages/UpdatePrerequisites/Main';
+import LogIn from './Pages/Login/Main';
+import LogOut from './Pages/Logout/Main';
+import { getCookie } from './util/util';
+import jwt_decode from "jwt-decode"
+import Protected from './Components/Protected';
+import ProtectedAdmin from './Components/ProtectedAdmin';
+import { useCookies } from 'react-cookie';
 
+const App = () => {
 
+  const [update, setUpdate] = useState(null);
 
+  const jwtCookie = getCookie('jwt')
+  let jwtData = {};
+  let role;
+  if(typeof jwtCookie === "string"){
+    jwtData = jwt_decode(jwtCookie); // if we have cookie, user is logged in
+    if(jwtData.role === "user"){
+      role = "user"
+    }
+    if(jwtData.role === "admin"){ //if role is admin
+      role = "admin"
+    }
+  }else{
+    //if we dont have cookie, user is not logged in
+    role = "unauth"
+  }
 
-const App = () => (
-  <div>
+  return (
+  <div className='flex-wrapper'>
 
     <div className='header'
       style={{
@@ -31,51 +58,32 @@ const App = () => (
 
       <Router>
         
-        <Menu mode="horizontal" >
-
-          <Menu.Item key="logo" >
-            <NavLink to='/'>
-              <img src={logo} width='110'></img>
-            </NavLink>
-          </Menu.Item>
-        
-          <Menu.Item 
-           key="newReport" icon={<FileAddOutlined />}>
-            <NavLink to='/NewReport'> 
-              New report
-            </NavLink>
-          </Menu.Item>
-        
-          <Menu.Item key="oldReports" icon={<FolderOpenOutlined />}>
-            <NavLink to='/OldReports'> 
-              Old Reports
-            </NavLink>
-          </Menu.Item>
-
-        </Menu>
+        <HeaderMenu></HeaderMenu>
 
         <Routes>
-          <Route path="/NewReport" element={<NewReportInput/>}/>
+          <Route path="/NewReport" element={<Protected role={role}> <NewReportInput/> </Protected>}/>
           <Route path="/" element={<Home/>}/>
-          <Route path='/OldReports' element={<OldReports/>}/> 
-          <Route path='/Calculations' element={<Calculations/>}/> 
-          <Route path='/AccountNoInput' element={<AccountNoInput/>}/> 
-          <Route path='/Results' element={<Results></Results>}/>
+          <Route path='/OldReports' element={<Protected role={role}> <OldReports/> </Protected>}/> 
+          <Route path='/Calculations' element={<Protected role={role}> <Calculations/> </Protected>}/> 
+          <Route path='/AccountNoInput' element={<Protected role={role}> <AccountNoInput/> </Protected>}/> 
+          <Route path='/Results' element={<Protected role={role}> <Results/> </Protected>}/>
+          <Route path='/viewReport/:reportId' element={<Protected role={role}> <ViewReport/> </Protected>}/>
+          <Route path='/ManageTaxData' element={<ProtectedAdmin role={role}> <ManageTaxData/> </ProtectedAdmin>}/>
+          <Route path='/AddTaxData' element={<ProtectedAdmin role={role}> <AddTaxData/> </ProtectedAdmin>}/>
+          <Route path='/updateTaxData/:taxDataId' element={<ProtectedAdmin role={role}> <UpdateTaxData/> </ProtectedAdmin>}/>
+          <Route path='/UpdatePrerequisites' element={<ProtectedAdmin role={role}> <UpdatePrerequisites/> </ProtectedAdmin>}/>
+          <Route path='/login' element={<LogIn setUpdate={setUpdate}/>}/>
+          <Route path='/logout' element={<LogOut setUpdate={setUpdate}/>}/>
         </Routes>
 
       </Router>
 
     </div>
 
+      <Footer></Footer>
     
-    <div className='footer'
-      style={{
-        textAlign: 'center',
-      }}
-    >
-      Deloitte ©2022 
-    </div>
   </div>
-);
+  );
+};
 
 export default App;

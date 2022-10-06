@@ -10,7 +10,8 @@ class inputs{
         this.vat_percentage = vat_percentage
     }
     
-    constructor(consumption_periode,el_invoice_amount,period_consumption_kwh,calculated_chw,water_invoice_amount,period_consumption_m3,vat_percentage){
+    constructor(company_name,consumption_periode,el_invoice_amount,period_consumption_kwh,calculated_chw,water_invoice_amount,period_consumption_m3,vat_percentage){
+        this.company_name = company_name
         this.consumption_periode = consumption_periode
         this.el_invoice_amount = el_invoice_amount
         this.period_consumption_kwh = period_consumption_kwh

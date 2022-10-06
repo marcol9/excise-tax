@@ -1,7 +1,7 @@
 import Api400Error from "../errorHandling/api400Error.js";
 import calculations from "../Models/calculations.js";
 import {roundToTwo, handleVatPercentage} from '../util/util.js'
-import { validateCalculations, validateInputs } from "../util/validators.js";
+import { validateCalculations, validateInputs, valInt } from "../util/validators.js";
 
 class calculationsService {
     constructor(calculationsRepo,taxDataService){
@@ -11,9 +11,7 @@ class calculationsService {
 
     // calculates calculations from input object
     async calculate(inputsObj){
-        if(!validateInputs(inputsObj)){
-            throw new Api400Error('Invalid input data')
-        }
+        validateInputs(inputsObj)
         
         //declaring variables
         const consumption_periode = inputsObj.consumption_periode;
@@ -22,7 +20,7 @@ class calculationsService {
         const calculated_chw = inputsObj.calculated_chw;
         const water_invoice_amount = inputsObj.water_invoice_amount;
         const period_consumption_m3 = inputsObj.period_consumption_m3;
-        const vat_percentage = handleVatPercentage(Math.round(inputsObj.vat_percentage));
+        const vat_percentage = handleVatPercentage(Math.round(inputsObj.vat_percentage)); //rounding vat percentage to nearest whole number and making it as decimal value
 
         // getting tax data for specific consumption periode
         const taxData = await this.taxDataService.getTaxData(consumption_periode);
@@ -49,16 +47,21 @@ class calculationsService {
         calculationsObj.deduct_el_tax = roundToTwo(calculationsObj.vat_el*vat_percentage);
         calculationsObj.deduct_water_tax = roundToTwo(calculationsObj.vat_water*vat_percentage);
         calculationsObj.reimb_tax_and_vat= roundToTwo(calculationsObj.reimb_el_tax +calculationsObj.reimb_water_tax + calculationsObj.deduct_el_tax +calculationsObj.deduct_water_tax);
-
+        
         return calculationsObj;
     }
 
     // saves calculations object to DB
     async createCalculations(calculationsObj){
-        if(!validateCalculations(calculationsObj)){
-            throw new Api400Error('Invalid calculation data')
-        }
+        validateCalculations(calculationsObj);
         return await this.calculationsRepo.createCalculations(calculationsObj);
+    }
+
+    async getCalculation(calculation_id){
+        if(!valInt(calculation_id)){
+            throw new Api400Error(`Invalid calculation id: ${calculation_id}`)
+        }
+        return await this.calculationsRepo.getCalculation(calculation_id);
     }
 }
 export default calculationsService;

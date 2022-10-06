@@ -1,0 +1,23 @@
+.center {
+    margin: auto;
+    width: 70%;
+    padding-top: 100px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 0px;
+  }
+
+.input-field{
+    width: 100%
+  }
+.submit-btn-div{
+   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-modal{
+  width: 60%;
+}
+.contact{
+  margin-bottom: 15px;
+}

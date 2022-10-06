@@ -1,0 +1,17 @@
+.footer{
+    margin-top: 100px;
+    padding-left: 100px;
+    padding-right: 100px;
+    border-top: 1px solid rgb(198, 189, 189);
+    border-bottom: 1px solid rgb(198, 189, 189);
+    background-color: rgb(238, 237, 237);
+}
+
+.copyright{
+    color:grey;
+    margin-bottom: 20px;
+}
+
+.kontakt{
+    margin-top: 20px;
+}
